@@ -7,6 +7,7 @@ EXPOSE 8080
 
 # Copia a pasta de certificados
 COPY ./hom-truststore /var/www/data/trust
+COPY ./license /var/www/data/license
 
 # Ajustes de memória e fuso horário
 ENV TZ=America/Sao_Paulo
