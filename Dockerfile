@@ -1,6 +1,6 @@
 # Usa a imagem exata do laboratório que estava no seu compose
 # Puxando a imagem do seu próprio Docker Hub público
-FROM itsjuniordias1997/cess-canna:1.12.6
+FROM itsjuniordias1997/cess-canna:latest
 
 # Expõe a porta 8080
 EXPOSE 8080
