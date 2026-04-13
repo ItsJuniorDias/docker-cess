@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  cess:
+    image: harbor.lab.vaultid.com.br/cess/cess:1.12.6
+    container_name: cess
+    depends_on:
+      - redis
+    restart: always
+    user: "33"
+
+    environment:
+      - clientIdMd=46024658000134
+      - clientSecretMd=HOMHsway9JZubFLJAqK
+
+      # MultiCloud (mantido padrão oficial)
+      - urlsMultiCloud={"https://apihom.birdid.com.br":{"id":"SOLUTI","client_id":"46024658000134","client_secret":"HOMHsway9JZubFLJAqK"},"https://apicloudid.hom.vaultid.com.br":{"id":"VAULTID","client_id":"46024658000134","client_secret":"HOMHsway9JZubFLJAqK"}}
+
+      - signatureAdapter=MultiCloudAdapter
+      - cessUrl=http://localhost:8080
+
+      - APACHE_SSL=false
+      - tokenValidityMAX=12
+      - ttlCacheGeneric=43200
+      - ttlCacheTrust=43200
+      - lifetime=43200
+
+      - sleep=100
+      - limit=100
+
+      - MEMORY_LIMIT=4096M
+
+      # 🔥 CORREÇÃO IMPORTANTE (faltava chave)
+      - TZ=America/Sao_Paulo
+      - timezone=America/Sao_Paulo
+
+      - level=INFO
+
+      - UPLOAD_MAX_FILESIZE=50M
+      - POST_MAX_SIZE=50M
+
+      - redisHost=redis
+      - redisPort=6379
+
+      # 🔥 AJUSTAR PARA IP OU DOMÍNIO REAL
+      - SERVER_NAME=localhost:8080
+
+      - HTTP_HTTPS=off
+      - sendMonitoring=false
+      - validateCertificate=false
+      - signatureOnly=false
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ./hom-truststore:/var/www/data/trust
+
+    networks:
+      - nw-cess
+
+    # 🔥 DNS fix (evita erro que você teve)
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    networks:
+      - nw-cess
+
+networks:
+  nw-cess:
+    driver: bridge
