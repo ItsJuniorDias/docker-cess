@@ -10,15 +10,27 @@ services:
     user: "33"
 
     environment:
+      # 🔐 Credenciais Soluti
       - clientIdMd=46024658000134
       - clientSecretMd=PRODOFP8csvXCo2G2R6y
 
-      # URLs de Produção (ajustadas conforme o e-mail)
+      # ☁️ Integração MultiCloud (BirdID + VaultID)
       - urlsMultiCloud={"https://api.birdid.com.br":{"id":"SOLUTI","client_id":"46024658000134","client_secret":"PRODOFP8csvXCo2G2R6y"},"https://apicloudid.vaultid.com.br":{"id":"VAULTID","client_id":"46024658000134","client_secret":"PRODOFP8csvXCo2G2R6y"}}
 
       - signatureAdapter=MultiCloudAdapter
+
+      # 🌐 URL interna do CESS
       - cessUrl=http://localhost:8080
+
+      # 🔥 ESSENCIAL (corrigido)
+      - signatureOnly=false
+      - SERVER_NAME=docker-cess.onrender.com # ⚠️ coloque seu domínio real aqui
+      - HTTP_HTTPS=on # necessário para OAuth
+
+      # 🔐 SSL (se estiver atrás de proxy, mantenha false)
       - APACHE_SSL=false
+
+      # ⚙️ Performance / cache
       - tokenValidityMAX=12
       - ttlCacheGeneric=43200
       - ttlCacheTrust=43200
@@ -26,28 +38,31 @@ services:
       - sleep=100
       - limit=100
       - MEMORY_LIMIT=4096M
+
+      # 🌎 Região
       - TZ=America/Sao_Paulo
       - timezone=America/Sao_Paulo
+
+      # 📊 Logs
       - level=INFO
+
+      # 📦 Upload
       - UPLOAD_MAX_FILESIZE=50M
       - POST_MAX_SIZE=50M
+
+      # 🔁 Redis
       - redisHost=redis
       - redisPort=6379
 
-      # AJUSTE: Informe o IP interno ou DNS do seu servidor de produção
-      - SERVER_NAME=localhost:8080
-
-      - HTTP_HTTPS=off
-      - sendMonitoring=false
+      # 🔒 Segurança
       - validateCertificate=true
-      - signatureOnly=true
+      - sendMonitoring=false
 
     ports:
       - "8080:8080"
 
     volumes:
       - ./license:/var/www/data/license
-      # Caso use truststore específica em produção, ajuste o caminho abaixo
       - ./truststore:/var/www/data/trust
 
     networks:
