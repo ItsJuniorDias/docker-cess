@@ -11,55 +11,48 @@ services:
 
     environment:
       - clientIdMd=46024658000134
-      - clientSecretMd=HOMHsway9JZubFLJAqK
+      - clientSecretMd=PRODOFP8csvXCo2G2R6y
 
-      # MultiCloud (mantido padrão oficial)
-      - urlsMultiCloud={"https://apihom.birdid.com.br":{"id":"SOLUTI","client_id":"46024658000134","client_secret":"HOMHsway9JZubFLJAqK"},"https://apicloudid.hom.vaultid.com.br":{"id":"VAULTID","client_id":"46024658000134","client_secret":"HOMHsway9JZubFLJAqK"}}
+      # URLs de Produção (ajustadas conforme o e-mail)
+      - urlsMultiCloud={"https://api.birdid.com.br":{"id":"SOLUTI","client_id":"46024658000134","client_secret":"PRODOFP8csvXCo2G2R6y"},"https://apicloudid.vaultid.com.br":{"id":"VAULTID","client_id":"46024658000134","client_secret":"PRODOFP8csvXCo2G2R6y"}}
 
       - signatureAdapter=MultiCloudAdapter
       - cessUrl=http://localhost:8080
-
       - APACHE_SSL=false
       - tokenValidityMAX=12
       - ttlCacheGeneric=43200
       - ttlCacheTrust=43200
       - lifetime=43200
-
       - sleep=100
       - limit=100
-
       - MEMORY_LIMIT=4096M
-
-      # 🔥 CORREÇÃO IMPORTANTE (faltava chave)
       - TZ=America/Sao_Paulo
       - timezone=America/Sao_Paulo
-
       - level=INFO
-
       - UPLOAD_MAX_FILESIZE=50M
       - POST_MAX_SIZE=50M
-
       - redisHost=redis
       - redisPort=6379
 
-      # 🔥 AJUSTAR PARA IP OU DOMÍNIO REAL
+      # AJUSTE: Informe o IP interno ou DNS do seu servidor de produção
       - SERVER_NAME=localhost:8080
 
       - HTTP_HTTPS=off
       - sendMonitoring=false
-      - validateCertificate=false
-      - signatureOnly=false
+      - validateCertificate=true
+      - signatureOnly=true
 
     ports:
       - "8080:8080"
 
     volumes:
-      - ./hom-truststore:/var/www/data/trust
+      - ./license:/var/www/data/license
+      # Caso use truststore específica em produção, ajuste o caminho abaixo
+      - ./truststore:/var/www/data/trust
 
     networks:
       - nw-cess
 
-    # 🔥 DNS fix (evita erro que você teve)
     dns:
       - 8.8.8.8
       - 1.1.1.1
